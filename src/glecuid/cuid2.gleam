@@ -1,14 +1,11 @@
-import atomic_array.{type AtomicArray}
-import gleam/bit_array
-import gleam/bool
-import gleam/crypto
-import gleam/erlang/process
 import gleam/float
 import gleam/int
 import gleam/pair
 import gleam/regexp
 import gleam/string
 import gleam/time/timestamp
+import glecuid/internals/counter.{type Counter}
+import glecuid/internals/util
 
 // ---- Types ---------------------------------------------
 
@@ -23,24 +20,15 @@ pub opaque type Generator {
   )
 }
 
-/// Type to represent a counter.
-/// 
-pub opaque type Counter {
-  Counter(AtomicArray)
-  CustomCounter(fn() -> Int)
-}
-
 // ---- Constants -----------------------------------------
 
 /// Constant representing CUIDv2 default length.
 /// 
 pub const default_length = 24
 
-const big_length = 32
-
 const initial_count_max = 476_782_367
 
-// ---- Generator functions -------------------------------
+// ---- Main functions ------------------------------------
 
 /// Generates a CUIDv2 using the default generator.
 /// 
@@ -70,21 +58,33 @@ pub fn create_id() -> String {
 pub fn generate(g: Generator) -> String {
   let Generator(counter, fingerprint, length, randomizer) = g
 
-  let first_letter = random_letter(randomizer)
+  let first_letter = util.random_letter(randomizer)
   let time = {
     timestamp.system_time()
     |> timestamp.to_unix_seconds_and_nanoseconds()
     |> pair.first()
     |> int.to_base36()
   }
-  let count = bump_counter(counter) |> int.to_base36()
-  let salt = create_entropy(randomizer, length)
+  let count = counter.bump(counter) |> int.to_base36()
+  let salt = util.create_entropy(randomizer, length)
 
   first_letter
   <> { time <> salt <> count <> fingerprint }
-  |> hash()
+  |> util.hash()
   |> string.slice(1, length - 1)
   |> string.lowercase()
+}
+
+/// Determines whether or not the string is a valid CUIDv2.
+/// 
+pub fn is_cuid(input: String) -> Bool {
+  let length = input |> string.length()
+  let assert Ok(regex) = regexp.from_string("^[a-z][0-9a-z]+$")
+
+  case regexp.check(regex, input) {
+    True if 2 <= length && length <= util.big_length -> True
+    _ -> False
+  }
 }
 
 // ---- Configs functions ---------------------------------
@@ -95,8 +95,8 @@ pub fn new() -> Generator {
   let randomizer = float.random
 
   Generator(
-    counter: random_int(randomizer, initial_count_max) |> new_counter(),
-    fingerprint: create_fingerprint(randomizer),
+    counter: util.random_int(randomizer, initial_count_max) |> counter.new(),
+    fingerprint: util.create_fingerprint(randomizer),
     length: default_length,
     randomizer:,
   )
@@ -108,7 +108,7 @@ pub fn new() -> Generator {
 /// every time it is called.
 /// 
 pub fn with_counter(g: Generator, counter: fn() -> Int) -> Generator {
-  Generator(..g, counter: CustomCounter(counter))
+  Generator(..g, counter: counter |> counter.from_function())
 }
 
 /// Sets a custom fingerprint to be used by the `Generator`.
@@ -133,162 +133,4 @@ pub fn with_length(g: Generator, length: Int) -> Generator {
 /// 
 pub fn with_randomizer(g: Generator, randomizer: fn() -> Float) -> Generator {
   Generator(..g, randomizer:)
-}
-
-// ---- Utils function ------------------------------------
-
-/// Converts `BitArray` into a `String` using base-36.
-/// 
-@external(javascript, "../glecuid_ffi.ts", "bit_array_to_base36")
-@internal
-pub fn bit_array_to_base36(bit_array: BitArray) -> String {
-  bit_array
-  |> bit_array_to_int()
-  |> int.to_base36()
-}
-
-/// Converts `BitArray` into `Int`.
-///
-fn bit_array_to_int(bit_array: BitArray) -> Int {
-  bit_array_to_int_loop(0, bit_array)
-}
-
-fn bit_array_to_int_loop(accumulator: Int, bit_array: BitArray) -> Int {
-  case bit_array {
-    <<>> -> accumulator
-
-    <<x:size(1)>>
-    | <<x:size(2)>>
-    | <<x:size(3)>>
-    | <<x:size(4)>>
-    | <<x:size(5)>>
-    | <<x:size(6)>>
-    | <<x:size(7)>>
-    | <<x:size(8)>> -> {
-      accumulator
-      |> int.bitwise_shift_left(8)
-      |> int.add(x)
-    }
-
-    <<x, rest:bits>> -> {
-      accumulator
-      |> int.bitwise_shift_left(8)
-      |> int.add(x)
-      |> bit_array_to_int_loop(rest)
-    }
-
-    _ -> accumulator
-  }
-}
-
-/// Raises the counter value by 1 and returns it.
-/// 
-@internal
-pub fn bump_counter(c: Counter) -> Int {
-  case c {
-    Counter(c) -> {
-      let assert Ok(_) = c |> atomic_array.add(0, 1)
-      let assert Ok(v) = c |> atomic_array.get(0)
-      v
-    }
-
-    CustomCounter(c) -> c()
-  }
-}
-
-/// Generates a random alphanumeric string with a specified length
-/// using the provided randomizer.
-/// 
-fn create_entropy(randomizer: fn() -> Float, length: Int) -> String {
-  create_entropy_loop("", 0, randomizer, length)
-}
-
-fn create_entropy_loop(
-  accumulator: String,
-  iteration: Int,
-  randomizer: fn() -> Float,
-  length: Int,
-) -> String {
-  use <- bool.guard(iteration >= length, accumulator)
-  { accumulator <> random_int(randomizer, 36) |> int.to_base36() }
-  |> create_entropy_loop(iteration + 1, randomizer, length)
-}
-
-/// Generates a fingerprint of the host environtment.
-/// 
-pub fn create_fingerprint(randomizer: fn() -> Float) -> String {
-  get_global_object()
-  <> create_entropy(randomizer, big_length)
-  |> hash()
-  |> string.slice(0, big_length)
-}
-
-@target(javascript)
-/// Returns global object of the host environtment as a `String`.
-/// 
-/// In `javascript` target this is the [Global object](https://developer.mozilla.org/en-US/docs/Glossary/Global_object).
-/// 
-@external(javascript, "../glecuid_ffi.ts", "get_global_object")
-@internal
-pub fn get_global_object() -> String
-
-@target(erlang)
-/// In `erlang` target this is the PID for the current process.
-/// 
-@internal
-pub fn get_global_object() -> String {
-  process.self() |> string.inspect()
-}
-
-/// Hashes the input.
-/// 
-fn hash(input: String) -> String {
-  // https://github.com/paralleldrive/cuid2/blob/v3.0.0/src/index.js#L32
-  // Drop the first character because it will bias the histogram
-  // to the left.
-  bit_array.from_string(input)
-  |> crypto.hash(crypto.Sha512, _)
-  |> bit_array_to_base36()
-  |> string.drop_start(1)
-}
-
-/// Determines whether or not the string is a valid CUIDv2.
-/// 
-pub fn is_cuid(input: String) -> Bool {
-  let length = input |> string.length()
-  let assert Ok(regex) = regexp.from_string("^[a-z][0-9a-z]+$")
-
-  case regexp.check(regex, input) {
-    True if 2 <= length && length <= big_length -> True
-    _ -> False
-  }
-}
-
-/// Creates a counter using the specified initial value.
-///
-pub fn new_counter(initial_count: Int) -> Counter {
-  let counter = atomic_array.new_unsigned(size: 1)
-  let assert Ok(_) = counter |> atomic_array.set(0, initial_count)
-  Counter(counter)
-}
-
-/// Generates a random int between zero and the given maximum 
-/// using the provided randomizer.
-/// The lower number is inclusive, the upper number is exclusive.
-/// 
-fn random_int(randomizer: fn() -> Float, max: Int) -> Int {
-  { randomizer() *. int.to_float(max) }
-  |> float.floor()
-  |> float.round()
-}
-
-/// Generates a random lowercase letter using the provided 
-/// randomizer.
-/// 
-fn random_letter(randomizer: fn() -> Float) -> String {
-  let assert Ok(c) =
-    random_int(randomizer, 27)
-    |> int.add(97)
-    |> string.utf_codepoint()
-  string.from_utf_codepoints([c])
 }

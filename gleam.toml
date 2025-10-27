@@ -10,6 +10,8 @@ links = [
   { title = "Docs", href = "https://hexdocs.pm/glecuid" },
 ]
 
+internal_modules = ["glecuid/internals/*"]
+
 [dependencies]
 atomic_array = ">= 1.0.0 and < 2.0.0"
 gleam_crypto = ">= 1.5.1 and < 2.0.0"

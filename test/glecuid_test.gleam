@@ -1,6 +1,8 @@
 import gleam/float
 import gleam/string
 import glecuid/cuid2
+import glecuid/internals/counter
+import glecuid/internals/util
 import gleeunit
 
 pub fn main() -> Nil {
@@ -24,11 +26,11 @@ pub fn generate_test() {
 }
 
 pub fn bit_array_to_base36_test() {
-  assert cuid2.bit_array_to_base36(<<>>) == "0"
-  assert cuid2.bit_array_to_base36(<<0xf0, 0xff, 0xff, 0xff>>) == "1UVA58F"
+  assert util.bit_array_to_base36(<<>>) == "0"
+  assert util.bit_array_to_base36(<<0xf0, 0xff, 0xff, 0xff>>) == "1UVA58F"
 
   let test_3 = <<0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff>>
-  assert cuid2.bit_array_to_base36(test_3) == "3NXRER0DPEBR3"
+  assert util.bit_array_to_base36(test_3) == "3NXRER0DPEBR3"
 
   let test_4 = <<
     0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0,
@@ -37,23 +39,23 @@ pub fn bit_array_to_base36_test() {
     0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff,
     0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff,
   >>
-  assert cuid2.bit_array_to_base36(test_4)
+  assert util.bit_array_to_base36(test_4)
     == "12BQ2KFBY2XI6SJWCVG65NJXN11WZQ0ZQZQB09LIP0D9GB5ZX0PSDXUXL7RFGINQALNWGRU9NF8DONCNUVRP5A89A3L1B2RRI1OF"
 }
 
 pub fn create_fingerprint_test() {
-  assert cuid2.create_fingerprint(float.random) |> string.length() >= 24
+  assert util.create_fingerprint(float.random) |> string.length() >= 24
 }
 
 pub fn new_counter_test() {
-  let counter = cuid2.new_counter(10)
-  assert counter |> cuid2.bump_counter() == 11
-  assert counter |> cuid2.bump_counter() == 12
-  assert counter |> cuid2.bump_counter() == 13
+  let counter = counter.new(10)
+  assert counter |> counter.bump() == 11
+  assert counter |> counter.bump() == 12
+  assert counter |> counter.bump() == 13
 }
 
 pub fn get_global_object_test() {
-  assert cuid2.get_global_object() |> string.length() > 0
+  assert util.get_global_object() |> string.length() > 0
 }
 
 pub fn is_cuid_test() {
