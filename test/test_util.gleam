@@ -5,9 +5,11 @@ import simplifile
 
 pub const n = 100_000
 
-pub const ids_path = "./test/artifacts/ids.json"
+pub const dir_path = "./test/artifacts"
 
-pub const histogram_path = "./test/artifacts/histogram.json"
+pub const ids_path = dir_path <> "/ids.json"
+
+pub const histogram_path = dir_path <> "/histogram.json"
 
 pub opaque type Error {
   ReadError(simplifile.FileError)

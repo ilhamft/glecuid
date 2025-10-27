@@ -1,6 +1,7 @@
 import bigi.{type BigInt}
 import gleam/dict
 import gleam/int
+import gleam/io
 import gleam/json
 import gleam/list
 import gleam/result
@@ -12,18 +13,25 @@ import test_util
 
 pub fn main() -> Nil {
   let #(ids, histogram) = create_id_pool(test_util.n)
-  let _ = {
+
+  let r = simplifile.create_directory(test_util.dir_path)
+  io.println(r |> string.inspect())
+
+  let r = {
     ids
     |> json.array(json.string)
     |> json.to_string()
     |> simplifile.write(to: test_util.ids_path)
   }
-  let _ = {
+  io.println(r |> string.inspect())
+
+  let r = {
     histogram
     |> json.array(json.int)
     |> json.to_string()
     |> simplifile.write(to: test_util.histogram_path)
   }
+  io.println(r |> string.inspect())
 
   Nil
 }
