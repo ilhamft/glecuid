@@ -24,15 +24,32 @@ Need unique ids in your app? Forget UUIDs and GUIDs which often collide in large
 
 **Cuid2 is not good for:**
 
-- Sequential ids (see the [note on k-sortable ids](https://github.com/paralleldrive/cuid2#note-on-k-sortablesequentialmonotonically-increasing-ids), below)
+- Sequential ids (see the [note on k-sortable ids](https://github.com/paralleldrive/cuid2#note-on-k-sortablesequentialmonotonically-increasing-ids))
 - High performance tight loops, such as render loops (if you don't need cross-host unique ids or security, consider a simple counter for this use-case, or try [Ulid](https://github.com/ulid/javascript) or [NanoId](https://github.com/ai/nanoid)).
 
-## Getting Started
+## Usage
 
 Add to your Gleam project:
 
 ```
 gleam add glecuid
+```
+
+Generate some ids:
+
+```gleam
+import glecuid/cuid2
+
+pub fn main() {
+  cuid2.create_id()
+  // -> "avu4793cnw6ljhov1s7Oxidg"
+
+  cuid2.new()
+  |> cuid2.with_length(10)
+  |> cuid2.with_fingerprint("my_machine")
+  |> cuid2.generate()
+  // -> "av77nekw5e"
+}
 ```
 
 View usage in the documentation at <https://hexdocs.pm/glecuid>.
