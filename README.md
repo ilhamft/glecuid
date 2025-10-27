@@ -3,7 +3,7 @@
 [![Package Version](https://img.shields.io/hexpm/v/glecuid)](https://hex.pm/packages/glecuid)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glecuid/)
 
-This is a port of [@paralleldrive/cuid2](https://github.com/paralleldrive/cuid2) in Gleam that works on all target.
+This is a port of [paralleldrive/cuid2@v3.0.0](https://github.com/paralleldrive/cuid2/tree/v3.0.0) in Gleam that works on all target.
 For more detailed information about Cuid2, please refer to the [original documentation](https://github.com/paralleldrive/cuid2/blob/main/README.md).
 
 ## Cuid2
