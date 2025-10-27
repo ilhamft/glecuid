@@ -1,7 +1,6 @@
 import gleam/float
 import gleam/string
 import glecuid/cuid2
-import glecuid/internals/counter
 import glecuid/internals/util
 import gleeunit
 
@@ -45,13 +44,6 @@ pub fn bit_array_to_base36_test() {
 
 pub fn create_fingerprint_test() {
   assert util.create_fingerprint(float.random) |> string.length() >= 24
-}
-
-pub fn new_counter_test() {
-  let counter = counter.new(10)
-  assert counter |> counter.bump() == 11
-  assert counter |> counter.bump() == 12
-  assert counter |> counter.bump() == 13
 }
 
 pub fn get_global_object_test() {

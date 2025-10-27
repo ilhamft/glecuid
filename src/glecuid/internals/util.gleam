@@ -51,6 +51,16 @@ fn bit_array_to_int_loop(accumulator: Int, bit_array: BitArray) -> Int {
   }
 }
 
+/// Bumps the global counter value by 1 and returns the new value. 
+/// Will creates a new counter if none exist.
+/// 
+/// On `erlang` this is implemented using `persistent_term`.
+/// On `javascript` this is implemented using global variable.
+///
+@external(erlang, "../../glecuid_ffi.erl", "bump_or_initialize_counter")
+@external(javascript, "../../glecuid_ffi.ts", "bump_or_initialize_counter")
+pub fn bump_or_initialize_counter(initial_count: Int) -> Int
+
 /// Generates a random alphanumeric string with a specified length
 /// using the provided randomizer.
 /// 

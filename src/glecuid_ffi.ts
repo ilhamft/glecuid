@@ -1,3 +1,28 @@
+/**
+ * The global counter.
+ */
+let counter: (() => number) | null = null;
+
+/**
+ * Bumps the global counter value by one.
+ * Creates a new counter if none exist.
+ * @param initial_value - The initial value for initializing the global counter. Not used if the global counter is already exist.
+ * @returns Counter value.
+ */
+export function bump_or_initialize_counter(initial_value: number): number {
+  if (counter) return counter();
+  initialize_counter(initial_value);
+  return initial_value;
+}
+
+/**
+ * Sets or resets the global counter with an initial value.
+ * @param initial_value - Initial value.
+ */
+function initialize_counter(initial_value: number): void {
+  counter = () => ++initial_value;
+}
+
 /*
  * Converts `BitArray` into a string using base-36.
  *
