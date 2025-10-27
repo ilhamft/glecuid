@@ -1,6 +1,5 @@
 # glecuid
 
-[![Release](https://github.com/ilhamft/glecuid/actions/workflows/release.yml/badge.svg)](https://github.com/ilhamft/glecuid/actions/workflows/release.yml)
 [![Test](https://github.com/ilhamft/glecuid/actions/workflows/test.yml/badge.svg)](https://github.com/ilhamft/glecuid/actions/workflows/test.yml)
 [![Package](https://img.shields.io/hexpm/v/glecuid)](https://hex.pm/packages/glecuid)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glecuid/)
