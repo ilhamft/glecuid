@@ -1,6 +1,8 @@
 # glecuid
 
-[![Package Version](https://img.shields.io/hexpm/v/glecuid)](https://hex.pm/packages/glecuid)
+[![Release](https://github.com/ilhamft/glecuid/actions/workflows/release.yml/badge.svg)](https://github.com/ilhamft/glecuid/actions/workflows/release.yml)
+[![Test](https://github.com/ilhamft/glecuid/actions/workflows/test.yml/badge.svg)](https://github.com/ilhamft/glecuid/actions/workflows/test.yml)
+[![Package](https://img.shields.io/hexpm/v/glecuid)](https://hex.pm/packages/glecuid)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glecuid/)
 
 This is a port of [paralleldrive/cuid2@v3.0.0](https://github.com/paralleldrive/cuid2/tree/v3.0.0) in Gleam that works on all target.
