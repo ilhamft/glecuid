@@ -1,0 +1,57 @@
+import gleam/float
+import gleam/string
+import glecuid/cuid2
+import gleeunit
+
+pub fn main() -> Nil {
+  gleeunit.main()
+}
+
+pub fn generate_test() {
+  assert cuid2.create_id() |> string.length() == cuid2.default_length
+
+  assert cuid2.new()
+    |> cuid2.with_length(10)
+    |> cuid2.generate()
+    |> string.length()
+    == 10
+
+  assert cuid2.new()
+    |> cuid2.with_length(32)
+    |> cuid2.generate()
+    |> string.length()
+    == 32
+}
+
+pub fn bit_array_to_base36_test() {
+  assert cuid2.bit_array_to_base36(<<>>) == "0"
+  assert cuid2.bit_array_to_base36(<<0xf0, 0xff, 0xff, 0xff>>) == "1UVA58F"
+
+  let test_3 = <<0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff>>
+  assert cuid2.bit_array_to_base36(test_3) == "3NXRER0DPEBR3"
+
+  let test_4 = <<
+    0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0,
+    0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff,
+    0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff,
+    0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff,
+    0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff,
+  >>
+  assert cuid2.bit_array_to_base36(test_4)
+    == "12BQ2KFBY2XI6SJWCVG65NJXN11WZQ0ZQZQB09LIP0D9GB5ZX0PSDXUXL7RFGINQALNWGRU9NF8DONCNUVRP5A89A3L1B2RRI1OF"
+}
+
+pub fn create_fingerprint_test() {
+  assert cuid2.create_fingerprint(float.random) |> string.length() > 0
+}
+
+pub fn new_counter_test() {
+  let counter = cuid2.new_counter(10)
+  assert counter |> cuid2.bump_counter() == 11
+  assert counter |> cuid2.bump_counter() == 12
+  assert counter |> cuid2.bump_counter() == 13
+}
+
+pub fn get_global_object_test() {
+  assert cuid2.get_global_object() |> string.length() > 0
+}
