@@ -9,20 +9,25 @@ pub const ids_path = "./test/artifacts/ids.json"
 
 pub const histogram_path = "./test/artifacts/histogram.json"
 
-pub fn get_ids() -> Result(List(String), Nil) {
+pub opaque type Error {
+  ReadError(simplifile.FileError)
+  ParseError(json.DecodeError)
+}
+
+pub fn get_ids() -> Result(List(String), Error) {
   simplifile.read(ids_path)
-  |> result.replace_error(Nil)
+  |> result.map_error(ReadError)
   |> result.try(fn(str) {
     json.parse(str, decode.list(decode.string))
-    |> result.replace_error(Nil)
+    |> result.map_error(ParseError)
   })
 }
 
-pub fn get_histogram() -> Result(List(Int), Nil) {
+pub fn get_histogram() -> Result(List(Int), Error) {
   simplifile.read(histogram_path)
-  |> result.replace_error(Nil)
+  |> result.map_error(ReadError)
   |> result.try(fn(str) {
     json.parse(str, decode.list(decode.int))
-    |> result.replace_error(Nil)
+    |> result.map_error(ParseError)
   })
 }
