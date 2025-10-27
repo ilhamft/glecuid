@@ -6,7 +6,7 @@
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glecuid/)
 
 This is a port of [paralleldrive/cuid2@v3.0.0](https://github.com/paralleldrive/cuid2/tree/v3.0.0) in Gleam that works on all target.
-For more detailed information about Cuid2, please refer to the [original documentation](https://github.com/paralleldrive/cuid2/blob/main/README.md).
+For more detailed information about Cuid2, please refer to the [original documentation](https://github.com/paralleldrive/cuid2/blob/v3.0.0/README.md).
 
 ## Cuid2
 
@@ -48,10 +48,84 @@ pub fn main() {
 
   cuid2.new()
   |> cuid2.with_length(10)
-  |> cuid2.with_fingerprint("my_machine")
   |> cuid2.generate()
   // -> "av77nekw5e"
 }
 ```
 
+### Configuration
+
+```gleam
+import glecuid/cuid2
+
+pub fn main() {
+  // The new function returns a default generator that can be modified.
+  let generator = cuid2.new()
+  // Customize the length of the id.
+  |> cuid2.with_length(10)
+  // A custom fingerprint for the host environtment.
+  // This is used to help prevent collisions when generating ids in a
+  // distributed system.
+  |> cuid2.with_fingerprint("my_machine")
+  // A custom counter.
+  // This is used to help prevent collisions when generating ids in
+  // the same millisecond.
+  |> cuid2.with_counter(fn() { 67 })
+  // A custom randomizer with the same API as float.random.
+  |> cuid2.with_randomizer(fn() { 0.42 })
+
+  cuid2.generate(generator)
+  // -> "av77nekw5e"
+}
+```
+
+### Validation
+
+```gleam
+import glecuid/cuid2
+
+pub fn main() {
+  cuid2.is_cuid(cuid2.create_id())
+  // -> "TRUE"
+
+  cuid2.is_cuid("not a cuid")
+  // -> "FALSE"
+}
+```
+
 View usage in the documentation at <https://hexdocs.pm/glecuid>.
+
+## Implementation Detail
+
+Cuid2 is made up of the following entropy sources:
+
+- An initial letter to make the id a usable identifier in JavaScript and HTML/CSS
+- The current system time
+- Pseudorandom values
+- A session counter
+- A host fingerprint
+
+### Pseudorandom value
+
+Uses [`float.random`](https://hexdocs.pm/gleam_stdlib/gleam/float.html#random) by default.
+
+### Session counter
+
+In `erlang` target, this is implemented using [`counters`](https://www.erlang.org/doc/apps/erts/counters.html) with the reference stored in [`persistent_term`](https://www.erlang.org/doc/apps/erts/persistent_term.html).
+
+If you don't wish to use the global counter, avoid using `create_id` and provide a custom counter when using `generate`. The global counter will not be created if you never use it.
+
+```gleam
+import glecuid/cuid2
+
+pub fn main() {
+  cuid2.new()
+  |> cuid2.with_random_counter()
+  |> cuid2.generate()
+  // -> "avu4793cnw6ljhov1s7Oxidg"
+}
+```
+
+### Host fingerprint
+
+In `erlang` target this is the [Pid](https://hexdocs.pm/gleam_erlang/gleam/erlang/process.html#Pid) of the current process.
