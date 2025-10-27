@@ -131,6 +131,14 @@ pub fn with_counter(g: Generator, counter: fn() -> Int) -> Generator {
   Generator(..g, counter: counter |> Some())
 }
 
+/// Sets a random counter to be used by the `Generator`.
+/// 
+/// This counter returns a random `Int` instead of an incrementing value.
+/// 
+pub fn with_random_counter(g: Generator) -> Generator {
+  Generator(..g, counter: Some(fn() { int.random(util.big_length) }))
+}
+
 /// Sets a custom fingerprint to be used by the `Generator`.
 /// 
 /// Fingerprint is a unique `String` to help prevent collision 
