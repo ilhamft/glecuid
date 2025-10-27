@@ -20,10 +20,10 @@ jobs:
 
       - name: check version
         run: |
-          version="$(cat gleam.toml | grep -m 1 "version" | sed -r "s/version *= *\"([[:digit:].]+)\"/\1/")"
+          version="v$(cat gleam.toml | grep -m 1 "version" | sed -r "s/version *= *\"([[:digit:].]+)\"/\1/")"
           if [ "$version" != "${{ github.ref_name }}" ]; then
             echo "tag '${{ github.ref_name }}' does not match the version in gleam.toml"
-            echo "expected a tag name 'v$version'"
+            echo "expected a tag name '$version'"
             exit 1
           fi
 
