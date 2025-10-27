@@ -42,7 +42,7 @@ pub fn bit_array_to_base36_test() {
 }
 
 pub fn create_fingerprint_test() {
-  assert cuid2.create_fingerprint(float.random) |> string.length() > 0
+  assert cuid2.create_fingerprint(float.random) |> string.length() >= 24
 }
 
 pub fn new_counter_test() {
@@ -54,4 +54,18 @@ pub fn new_counter_test() {
 
 pub fn get_global_object_test() {
   assert cuid2.get_global_object() |> string.length() > 0
+}
+
+pub fn is_cuid_test() {
+  assert cuid2.is_cuid("") == False
+  assert cuid2.is_cuid("67") == False
+  assert cuid2.is_cuid("aaaaDLL") == False
+  assert cuid2.is_cuid("yi7rqj1trke") == True
+  assert cuid2.is_cuid("-x!ha") == False
+  assert cuid2.is_cuid("ab*%@#x") == False
+  assert cuid2.is_cuid(cuid2.create_id()) == True
+  assert cuid2.is_cuid(
+      cuid2.create_id() <> cuid2.create_id() <> cuid2.create_id(),
+    )
+    == False
 }
