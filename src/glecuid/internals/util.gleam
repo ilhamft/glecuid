@@ -104,16 +104,25 @@ pub fn get_global_object() -> String {
 }
 
 /// Hashes the input.
-/// 
+///
 pub fn hash(input: String) -> String {
   // https://github.com/paralleldrive/cuid2/blob/v3.0.0/src/index.js#L32
   // Drop the first character because it will bias the histogram
   // to the left.
-  bit_array.from_string(input)
-  |> crypto.hash(crypto.Sha512, _)
+  do_hash(input)
   |> bit_array_to_base36()
   |> string.drop_start(1)
 }
+
+@target(erlang)
+fn do_hash(input: String) -> BitArray {
+  bit_array.from_string(input)
+  |> crypto.hash(crypto.Sha512, _)
+}
+
+@target(javascript)
+@external(javascript, "../../glecuid_ffi.ts", "hash")
+fn do_hash(input: String) -> BitArray
 
 /// Generates a random int between zero and the given maximum 
 /// using the provided randomizer.
