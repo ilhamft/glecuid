@@ -21,6 +21,7 @@ jobs:
           node-version: '22'
       - run: gleam deps download
       - run: gleam format --check
-      - run: gleam run -m histogram_builder
+      - run: gleam run -m histogram_builder -t erlang
       - run: gleam test -t erlang
+      - run: gleam run -m histogram_builder -t javascript
       - run: gleam test -t javascript
