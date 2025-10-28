@@ -1,6 +1,5 @@
 import gleam/bit_array
 import gleam/bool
-import gleam/crypto
 import gleam/erlang/process
 import gleam/float
 import gleam/int
@@ -116,9 +115,11 @@ pub fn hash(input: String) -> String {
 
 @target(erlang)
 fn do_hash(input: String) -> BitArray {
-  bit_array.from_string(input)
-  |> crypto.hash(crypto.Sha512, _)
+  bit_array.from_string(input) |> do_hash_()
 }
+
+@external(erlang, "glecuid_ffi", "hash")
+pub fn do_hash_(input: BitArray) -> BitArray
 
 @target(javascript)
 @external(javascript, "../../glecuid_ffi.ts", "hash")

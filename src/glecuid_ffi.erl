@@ -1,6 +1,6 @@
 -module(glecuid_ffi).
 
--export([bump_or_initialize_counter/1]).
+-export([bump_or_initialize_counter/1, hash/1]).
 
 bump_or_initialize_counter(InitialValue) ->
     try
@@ -17,3 +17,6 @@ initialize_counter(InitialValue) ->
     CounterRef = counters:new(1, [write_concurrency]),
     counters:put(CounterRef, 1, InitialValue),
     persistent_term:put({?MODULE, "Counter"}, CounterRef).
+
+hash(Data) ->
+    crypto:hash(sha3_512, Data).
