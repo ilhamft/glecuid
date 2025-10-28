@@ -87,17 +87,12 @@ pub fn create_fingerprint(randomizer: fn() -> Float) -> String {
   |> string.slice(0, big_length)
 }
 
-@target(javascript)
 /// Returns global object of the host environtment as a `String`.
 /// 
-/// In `javascript` target this is the [Global object](https://developer.mozilla.org/en-US/docs/Glossary/Global_object).
+/// - In `erlang` target this is the PID for the current process.
+/// - In `javascript` target this is the [Global object](https://developer.mozilla.org/en-US/docs/Glossary/Global_object).
 /// 
 @external(javascript, "../../glecuid_ffi.ts", "get_global_object")
-pub fn get_global_object() -> String
-
-@target(erlang)
-/// In `erlang` target this is the PID for the current process.
-/// 
 pub fn get_global_object() -> String {
   process.self() |> string.inspect()
 }
