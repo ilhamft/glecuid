@@ -119,7 +119,7 @@ fn do_hash(input: String) -> BitArray {
 }
 
 @external(erlang, "glecuid_ffi", "hash")
-pub fn do_hash_(input: BitArray) -> BitArray
+fn do_hash_(input: BitArray) -> BitArray
 
 @target(javascript)
 @external(javascript, "../../glecuid_ffi.ts", "hash")
