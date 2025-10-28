@@ -26,11 +26,13 @@ function initialize_counter(initial_value: number): void {
   counter = () => ++initial_value;
 }
 
-/*
+/**
  * Converts `BitArray` into a string using base-36.
  *
  * Adapted from https://github.com/juanelas/bigint-conversion
  * MIT License Copyright (c) 2018 Juan Hernández Serrano
+ *
+ * @returns `BitArray` value in base-36 `String`.
  */
 export function bit_array_to_base36(bit_array: any): string {
   let bits = 8n;
@@ -46,6 +48,7 @@ export function bit_array_to_base36(bit_array: any): string {
 
 /**
  * Returns global object of the host environtment as a string.
+ * @returns Global object keys as `String`.
  */
 export function get_global_object(): string {
   const global_object =
