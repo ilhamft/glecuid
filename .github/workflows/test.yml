@@ -24,5 +24,6 @@ jobs:
       - run: gleam format --check
       - run: gleam run -m histogram_builder -t erlang
       - run: gleam test -t erlang
+      - run: npm i @noble/hashes@2.0.1
       - run: gleam run -m histogram_builder -t javascript
       - run: gleam test -t javascript

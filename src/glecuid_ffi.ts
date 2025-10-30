@@ -1,5 +1,5 @@
 import { BitArray } from './gleam.mjs';
-import { sha3_512 } from './@noble/hashes/sha3.ts';
+import { sha3_512 } from '@noble/hashes/sha3.js';
 
 /**
  * The global counter.
