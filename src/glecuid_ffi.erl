@@ -14,7 +14,7 @@ bump_or_initialize_counter(InitialValue) ->
     end.
 
 initialize_counter(InitialValue) ->
-    CounterRef = counters:new(1, [write_concurrency]),
+    CounterRef = counters:new(1, [atomics]),
     counters:put(CounterRef, 1, InitialValue),
     persistent_term:put({?MODULE, "Counter"}, CounterRef).
 

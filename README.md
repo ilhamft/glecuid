@@ -3,6 +3,9 @@
 [![Test](https://github.com/ilhamft/glecuid/actions/workflows/test.yml/badge.svg)](https://github.com/ilhamft/glecuid/actions/workflows/test.yml)
 [![Package](https://img.shields.io/hexpm/v/glecuid)](https://hex.pm/packages/glecuid)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glecuid/)
+[![MIT](https://img.shields.io/github/license/ilhamft/glecuid?color=brightgreen)](https://github.com/ilhamft/glecuid/blob/main/LICENSE)
+[![Gleam Erlang](https://img.shields.io/badge/%20gleam%20%E2%9C%A8-Erlang-red)](https://gleam.run)
+[![Gleam JS](https://img.shields.io/badge/%20gleam%20%E2%9C%A8-JS-yellow)](https://gleam.run/news/v0.16-gleam-compiles-to-javascript)
 
 This is a port of [paralleldrive/cuid2@v3.0.0](https://github.com/paralleldrive/cuid2/tree/v3.0.0) in Gleam that works on all target.
 For more detailed information about Cuid2, please refer to the [original documentation](https://github.com/paralleldrive/cuid2/blob/v3.0.0/README.md).
