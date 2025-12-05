@@ -1,4 +1,3 @@
-import gleam/bit_array
 import gleam/string
 import glecuid/internals/util
 
@@ -14,12 +13,8 @@ pub fn hash(input: String) -> String {
 }
 
 @target(erlang)
-fn do_hash(input: String) -> BitArray {
-  bit_array.from_string(input) |> do_hash_()
-}
-
 @external(erlang, "glecuid_ffi", "hash")
-fn do_hash_(input: BitArray) -> BitArray
+fn do_hash(input: String) -> BitArray
 
 @target(javascript)
 @external(javascript, "../../glecuid_ffi.ts", "hash")
