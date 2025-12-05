@@ -1,5 +1,6 @@
 import gleam/float
 import gleam/string
+import glecuid/internals/crypto
 import glecuid/internals/util
 
 pub fn bit_array_to_base36_test() {
@@ -33,7 +34,8 @@ pub fn create_entropy_test() {
 }
 
 pub fn create_fingerprint_test() {
-  assert util.create_fingerprint(float.random) |> string.length() >= 32
+  assert util.create_fingerprint(float.random, crypto.hash) |> string.length()
+    >= 32
 }
 
 pub fn get_global_object_test() {

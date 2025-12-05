@@ -5,6 +5,7 @@ import gleam/pair
 import gleam/regexp
 import gleam/string
 import gleam/time/timestamp
+import glecuid/internals/crypto
 import glecuid/internals/util
 
 // ---- Types ---------------------------------------------
@@ -90,14 +91,14 @@ pub fn generate(g: Generator) -> String {
 
   let fingerprint = case fingerprint {
     Some(x) -> x
-    None -> util.create_fingerprint(randomizer)
+    None -> util.create_fingerprint(randomizer, crypto.hash)
   }
 
   let salt = util.create_entropy(randomizer, length)
 
   first_letter
   <> { time <> salt <> count <> fingerprint }
-  |> util.hash()
+  |> crypto.hash()
   |> string.slice(1, length - 1)
   |> string.lowercase()
 }

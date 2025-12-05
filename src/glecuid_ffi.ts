@@ -1,5 +1,7 @@
+// @ts-ignore
 import { BitArray } from './gleam.mjs';
-import { sha3_512 } from './@noble/hashes/sha3.ts';
+// import { sha3_512 } from './@noble/hashes/sha3.ts';
+import { hash as nodeHash } from 'node:crypto';
 
 /**
  * The global counter.
@@ -68,6 +70,7 @@ export function get_global_object(): string {
 export function hash(input: string): BitArray {
   const encoder = new TextEncoder();
   const data = encoder.encode(input);
-  const hash = sha3_512(data);
+  const hash = nodeHash('SHA3-512', data, 'buffer');
+  // const hash = sha3_512(data);
   return new BitArray(hash);
 }
