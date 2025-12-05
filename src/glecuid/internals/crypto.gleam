@@ -17,5 +17,5 @@ pub fn hash(input: String) -> String {
 fn do_hash(input: String) -> BitArray
 
 @target(javascript)
-@external(javascript, "../../glecuid_ffi.ts", "hash")
+@external(javascript, "../../crypto_ffi.ts", "hash")
 fn do_hash(input: String) -> BitArray
