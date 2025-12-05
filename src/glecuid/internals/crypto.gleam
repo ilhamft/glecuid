@@ -12,10 +12,6 @@ pub fn hash(input: String) -> String {
   |> string.drop_start(1)
 }
 
-@target(erlang)
 @external(erlang, "glecuid_ffi", "hash")
-fn do_hash(input: String) -> BitArray
-
-@target(javascript)
 @external(javascript, "../../crypto_ffi.ts", "hash")
 fn do_hash(input: String) -> BitArray
