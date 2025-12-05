@@ -1,5 +1,5 @@
 name = "glecuid"
-version = "1.0.3"
+version = "1.0.4"
 
 licences = ["MIT"]
 description = "A Gleam implementation of CUID2, the secure, collision-resistant ids optimized for horizontal scaling and performance."
