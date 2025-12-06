@@ -8,11 +8,11 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   webServer: {
-    command: 'gleam run -m lustre/dev start',
+    command: 'npm run start',
     reuseExistingServer: !process.env.CI,
   },
   use: {
-    baseURL: 'http://localhost:1234',
+    baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
   },
   projects: [

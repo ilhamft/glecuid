@@ -44,5 +44,6 @@ jobs:
           node-version: lts/*
       - run: gleam deps download
       - run: npm ci
+      - run: gleam run -m lustre/dev build
       - run: npx playwright install --with-deps
       - run: npx playwright test
