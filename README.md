@@ -48,6 +48,12 @@ Add to your Gleam project:
 gleam add glecuid
 ```
 
+Install [noble-hashes](https://github.com/paulmillr/noble-hashes) if your project needs to run on browser (see [note](###-Notes-on-JavaScript-target)):
+
+```
+npm install @noble/hashes
+```
+
 Generate some ids:
 
 ```gleam
