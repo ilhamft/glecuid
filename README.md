@@ -10,7 +10,14 @@
 This is a port of [paralleldrive/cuid2@v3.0.0](https://github.com/paralleldrive/cuid2/tree/v3.0.0) in Gleam that works on all target.
 For more detailed information about Cuid2, please refer to the [original documentation](https://github.com/paralleldrive/cuid2/blob/v3.0.0/README.md).
 
-On `javascript` target this package uses [paulmillr/noble-hashes@2.0.1](https://github.com/paulmillr/noble-hashes/tree/2.0.1) for browser compatibility.
+### Notes on JavaScript target
+
+This package uses either [noble-hashes](https://github.com/paulmillr/noble-hashes) or [node:crypto](https://nodejs.org/api/crypto.html#cryptohashalgorithm-data-options) for hashing.
+
+On browser `noble-hashes` is **required**.
+You can install it by using `npm install @noble/hashes`.
+
+On server this package will try to use `noble-hashes` first, then fallback to `node:crypto` if `noble-hashes` is not installed.
 
 ## Cuid2
 
@@ -39,6 +46,12 @@ Add to your Gleam project:
 
 ```
 gleam add glecuid
+```
+
+Install [noble-hashes](https://github.com/paulmillr/noble-hashes) if your project needs to run on browser (see [note](#notes-on-javascript-target)):
+
+```
+npm install @noble/hashes
 ```
 
 Generate some ids:

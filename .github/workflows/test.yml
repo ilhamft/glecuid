@@ -18,10 +18,32 @@ jobs:
           gleam-version: '1.13.0'
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: lts/*
       - run: gleam deps download
       - run: gleam format --check
       - run: gleam run -m histogram_builder -t erlang
       - run: gleam test -t erlang
       - run: gleam run -m histogram_builder -t javascript
       - run: gleam test -t javascript
+
+  playwright-test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '28'
+          rebar3-version: '3'
+          gleam-version: '1.13.0'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - run: gleam deps download
+      - run: npm ci
+      - run: gleam run -m lustre/dev build
+      - run: npx playwright install --with-deps
+      - run: npx playwright test

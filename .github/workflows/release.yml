@@ -18,7 +18,7 @@ jobs:
           gleam-version: '1.13.0'
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: lts/*
 
       - name: check version
         run: |
@@ -31,10 +31,6 @@ jobs:
 
       - run: gleam deps download
       - run: gleam format --check
-      - run: gleam run -m histogram_builder -t erlang
-      - run: gleam test -t erlang
-      - run: gleam run -m histogram_builder -t javascript
-      - run: gleam test -t javascript
 
       - run: gleam publish -y
         env:

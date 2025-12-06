@@ -1,6 +1,3 @@
-import { BitArray } from './gleam.mjs';
-import { sha3_512 } from './@noble/hashes/sha3.ts';
-
 /**
  * The global counter.
  */
@@ -58,16 +55,4 @@ export function get_global_object(): string {
       ? window
       : {};
   return Object.keys(global_object).toString();
-}
-
-/**
- * Hashes the input using SHA3-512 algorithm.
- * @param input - Input string.
- * @returns Hash output as Gleam's `BitArray`.
- */
-export function hash(input: string): BitArray {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(input);
-  const hash = sha3_512(data);
-  return new BitArray(hash);
 }

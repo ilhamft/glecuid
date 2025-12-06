@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@noble/hashes": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1"
+  }
+}

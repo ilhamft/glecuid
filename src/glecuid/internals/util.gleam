@@ -1,4 +1,3 @@
-import gleam/bit_array
 import gleam/bool
 import gleam/erlang/process
 import gleam/float
@@ -80,10 +79,13 @@ fn create_entropy_loop(
 
 /// Generates a fingerprint of the host environtment.
 /// 
-pub fn create_fingerprint(randomizer: fn() -> Float) -> String {
+pub fn create_fingerprint(
+  randomizer: fn() -> Float,
+  hasher: fn(String) -> String,
+) -> String {
   get_global_object()
   <> create_entropy(randomizer, big_length)
-  |> hash()
+  |> hasher()
   |> string.slice(0, big_length)
 }
 
@@ -96,29 +98,6 @@ pub fn create_fingerprint(randomizer: fn() -> Float) -> String {
 pub fn get_global_object() -> String {
   process.self() |> string.inspect()
 }
-
-/// Hashes the input.
-///
-pub fn hash(input: String) -> String {
-  // https://github.com/paralleldrive/cuid2/blob/v3.0.0/src/index.js#L32
-  // Drop the first character because it will bias the histogram
-  // to the left.
-  do_hash(input)
-  |> bit_array_to_base36()
-  |> string.drop_start(1)
-}
-
-@target(erlang)
-fn do_hash(input: String) -> BitArray {
-  bit_array.from_string(input) |> do_hash_()
-}
-
-@external(erlang, "glecuid_ffi", "hash")
-fn do_hash_(input: BitArray) -> BitArray
-
-@target(javascript)
-@external(javascript, "../../glecuid_ffi.ts", "hash")
-fn do_hash(input: String) -> BitArray
 
 /// Generates a random int between zero and the given maximum 
 /// using the provided randomizer.
