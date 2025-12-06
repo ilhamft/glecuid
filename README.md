@@ -12,10 +12,12 @@ For more detailed information about Cuid2, please refer to the [original documen
 
 ### Notes on JavaScript target
 
-On server this package uses [node:crypto](https://nodejs.org/api/crypto.html#cryptohashalgorithm-data-options) for hashing.
+This package uses either [noble-hashes](https://github.com/paulmillr/noble-hashes) or [node:crypto](https://nodejs.org/api/crypto.html#cryptohashalgorithm-data-options) for hashing.
 
-On browser this package require [noble-hashes](https://github.com/paulmillr/noble-hashes) to be installed.
+On browser `noble-hashes` is **required**.
 You can install it by using `npm install @noble/hashes`.
+
+On server this package will try to use `noble-hashes` first, then fallback to `node:crypto` if `noble-hashes` is not installed.
 
 ## Cuid2
 

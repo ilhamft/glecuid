@@ -4,11 +4,11 @@ import { BitArray } from './gleam.mjs';
 let hasher: ((data: Uint8Array<ArrayBuffer>) => Uint8Array) | null = null;
 
 try {
-  const crypto = await import('node:crypto');
-  hasher = (data) => crypto.hash('SHA3-512', data, 'buffer');
-} catch {
   const crypto = await import('@noble/hashes/sha3.js');
   hasher = (data) => crypto.sha3_512(data);
+} catch {
+  const crypto = await import('node:crypto');
+  hasher = (data) => crypto.hash('SHA3-512', data, 'buffer');
 }
 
 /**
