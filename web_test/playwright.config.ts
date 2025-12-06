@@ -12,7 +12,7 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
   },
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:1234',
     trace: 'on-first-retry',
   },
   projects: [
