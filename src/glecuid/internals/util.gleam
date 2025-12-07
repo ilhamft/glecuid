@@ -114,7 +114,7 @@ pub fn random_int(randomizer: fn() -> Float, max: Int) -> Int {
 /// 
 pub fn random_letter(randomizer: fn() -> Float) -> String {
   let assert Ok(c) =
-    random_int(randomizer, 25)
+    random_int(randomizer, 26)
     |> int.add(97)
     |> string.utf_codepoint()
   string.from_utf_codepoints([c])
