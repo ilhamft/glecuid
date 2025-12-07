@@ -21,5 +21,5 @@ export function hash(input: string) {
   const data = encoder.encode(input);
   if (!hasher) throw new Error('Hasher is not available.');
   const hash = hasher(data);
-  return new BitArray$BitArray(hash);
+  return BitArray$BitArray(hash);
 }
