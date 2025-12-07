@@ -1,5 +1,5 @@
 // @ts-ignore
-import { BitArray } from './gleam.mjs';
+import { BitArray$BitArray } from './gleam.mjs';
 
 let hasher: ((data: Uint8Array<ArrayBuffer>) => Uint8Array) | null = null;
 
@@ -16,10 +16,10 @@ try {
  * @param input - Input string.
  * @returns Hash output as Gleam's `BitArray`.
  */
-export function hash(input: string): BitArray {
+export function hash(input: string) {
   const encoder = new TextEncoder();
   const data = encoder.encode(input);
   if (!hasher) throw new Error('Hasher is not available.');
   const hash = hasher(data);
-  return new BitArray(hash);
+  return new BitArray$BitArray(hash);
 }
