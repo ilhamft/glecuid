@@ -1,4 +1,5 @@
-import { BitArray } from './gleam.mjs';
+// @ts-ignore
+import { BitArray$BitArray } from './gleam.mjs';
 import { sha3_512 } from './@noble/hashes/sha3.ts';
 
 /**
@@ -65,9 +66,9 @@ export function get_global_object(): string {
  * @param input - Input string.
  * @returns Hash output as Gleam's `BitArray`.
  */
-export function hash(input: string): BitArray {
+export function hash(input: string) {
   const encoder = new TextEncoder();
   const data = encoder.encode(input);
   const hash = sha3_512(data);
-  return new BitArray(hash);
+  return BitArray$BitArray(hash);
 }
