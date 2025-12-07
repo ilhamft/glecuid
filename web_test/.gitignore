@@ -1,0 +1,17 @@
+*.beam
+*.ez
+/build
+erl_crash.dump
+/test/artifacts
+/node_modules
+
+# Lustre Dev Tools
+/.lustre
+/dist
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
